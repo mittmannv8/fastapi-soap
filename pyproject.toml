@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "fastapi-soap"
+version = "0.0.1"
+description = ""
+authors = ["Cleiton Junior Mittmann <mittmannv8@gmail.com>"]
+readme = "README.md"
+packages = [{include = "fastapi_soap"}]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Framework :: FastAPI",
+    "Framework :: Pydantic",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Internet",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+]
+
+[tool.poetry.urls]
+"Homepage" = "https://github.com/mittmannv8/fastapi-soap"
+"Documentation" = "https://github.com/mittmannv8/fastapi-soap"
+"Bug Tracker" = "https://github.com/mittmannv8/fastapi-soap/issues"
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pydantic = "^1.10.5"
+lxml = "^4.9.2"
+pydantic-xml = {extras = ["lxml"], version = "^0.6.0"}
+fastapi = "^0.95.0"
+
+
+[tool.poetry.group.dev.dependencies]
+blue = "^0.9.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
