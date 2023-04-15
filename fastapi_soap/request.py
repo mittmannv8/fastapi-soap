@@ -2,13 +2,13 @@ from typing import Any, Type, TypeVar, cast
 
 from fastapi import Body, Depends
 from pydantic import ValidationError
+from fastapi_soap.exceptions import ClientFaultException
 
 from fastapi_soap.models import (
     BodyContent,
-    FaultResponse,
     SoapBody,
     SoapEnvelope,
-    SoapHeader,
+    SoapHeader
 )
 
 SoapEnvelopeType = TypeVar('SoapEnvelopeType', bound=SoapEnvelope)
@@ -47,7 +47,7 @@ def XMLBody(model: Type[BodyContent]) -> Any:
             )
             return envelope.body.call
         except ValidationError as err:
-            return FaultResponse(faultcode='client', faultstring=str(err))
+            raise ClientFaultException(detail=str(err))
 
     return Depends(parse_model)
 

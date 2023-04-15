@@ -3,7 +3,7 @@
 This package helps to create Soap WebServices using FastAPI (What?!?!)
 
 ## Motivation
-I know, FastAPI is a REST micro framework, but sometimes is needed expose a Soap Interface on a already running FastAPI application for an legacy client/application that only supports, well, the Soap protocol...
+I know, FastAPI is a REST micro framework, but sometimes is needed to expose a Soap Interface on a already running FastAPI application for an legacy client/application that only supports, well, the Soap protocol...
 
 ## Installation and dependencies
 Only FastAPI, Pydantic and Pydantic XML are required.

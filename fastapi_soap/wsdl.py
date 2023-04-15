@@ -39,7 +39,11 @@ def generate_xsd_element(
     if model is not None:
         element.set('name', model.__xml_tag__)
     elif model_field and hasattr(model_field.field_info, 'tag'):
-        tag_name = model_field.field_info.tag or model_field.name
+        tag_name = (
+            model_field.field_info.tag
+            or model_field.field_info.alias
+            or model_field.name
+        )
         element.set('name', tag_name)
     elif hasattr(model_, '__xml_tag__'):
         element.set('name', model_.__xml_tag__)
@@ -49,14 +53,14 @@ def generate_xsd_element(
         element.set('name', model_field.name)
 
     if isinstance(model_, XmlModelMeta):
-        complext_type = Element('xs:complexType')
-        sequence = ET.SubElement(complext_type, 'xs:sequence')
+        complex_type = Element('xs:complexType')
+        sequence = ET.SubElement(complex_type, 'xs:sequence')
 
         for model_field_ in model_.__fields__.values():
             tag = generate_xsd_element(model_field=model_field_)
             sequence.append(tag)
 
-        element.append(complext_type)
+        element.append(complex_type)
 
     else:
         element_type = PYTHON_XSD_TYPE_MAP.get(
