@@ -167,7 +167,7 @@ def generate_wsdl(
             SubElement(
                 operation_element, f'wsdl:{wsdl_action}', message=message_name
             )
-            
+
             # binding
             binding_operation_action = SubElement(
                 binding_operation, f'wsdl:{wsdl_action}', message=message_name

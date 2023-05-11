@@ -83,7 +83,9 @@ class SoapRouter(APIRouter):
         self._name = name
 
         self._methods = {}
-        self.add_api_route('/', self._generate_wsdl, methods=['GET'])
+        self.add_api_route(
+            '/', self._generate_wsdl, methods=['GET'], status_code=200
+        )
 
     def _generate_wsdl(self):
         wsdl = generate_wsdl(self._name, self._methods, url=self.prefix)
@@ -95,6 +97,7 @@ class SoapRouter(APIRouter):
         name: str,
         request_model: Optional[Type[BaseXmlModel]] = None,
         response_model: Optional[Type[BaseXmlModel]] = None,
+        status_code: int = 200,
     ) -> Callable[[DecoratedCallable], DecoratedCallable]:
         """Register the soap operation (also known as method) to the webservice.
 
@@ -120,7 +123,11 @@ class SoapRouter(APIRouter):
                 {name: {'request': request_model, 'response': response_model}}
             )
             self.add_api_route(
-                f'/{name}', func, methods=['POST'], response_class=SoapResponse
+                f'/{name}',
+                func,
+                methods=['POST'],
+                response_class=SoapResponse,
+                status_code=status_code,
             )
             return func
 
