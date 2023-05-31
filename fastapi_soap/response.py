@@ -54,7 +54,7 @@ class SoapResponse(Response):
     def render(self, content: Any) -> str | bytes:
         if isinstance(content, BaseXmlModel):
             if not self._envelope_wrap:
-                return content.to_xml()
+                return content.to_xml(encoding='UTF-8', standalone=True)
 
             envelope_model = SoapEnvelope[
                 self._soap_header.__class__, SoapBody[content.__class__]
@@ -62,6 +62,6 @@ class SoapResponse(Response):
             envelope: envelope_model = envelope_model(
                 header=self._soap_header, body=SoapBody(call=content)
             )
-            return envelope.to_xml()
+            return envelope.to_xml(encoding='UTF-8', standalone=True)
 
         return content if not isinstance(content, str) else content.encode()

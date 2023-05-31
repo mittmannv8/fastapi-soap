@@ -13,6 +13,8 @@ Only FastAPI, Pydantic and Pydantic XML are required.
 
 ```python
 from fastapi import FastAPI
+from pydantic_xml import element
+from fastapi_soap import SoapRouter, XMLBody, SoapResponse
 from fastapi_soap.models import BodyContent
 
 
@@ -30,6 +32,12 @@ soap = SoapRouter(name='Calculator', prefix='/Calculator')
     response_model=Result
 )
 def sum_operation(body: Operands = XMLBody(Operands)):
+    """
+    Receives an Operands object and returns a Result object.
+
+    Args:
+        body (Operands): Operands object with a list of operands
+    """
     result = sum(body.operands)
     
     return SoapResponse(
@@ -38,10 +46,11 @@ def sum_operation(body: Operands = XMLBody(Operands)):
 
 
 app = FastAPI()
+
 app.include_router(soap)
 
 if __name__ == '__main__':
-    import uvicorn
+    import uvicorn  # Any Python ASGI web server can be used
     uvicorn.run("example.main:app")
 ```
 _(This script is complete, it should run "as is")_
@@ -49,6 +58,33 @@ _(This script is complete, it should run "as is")_
 
 The WSDL is available on webservice root path for GET method.
 ```
-GET http://localhost:8000/Calculator/
+GET http://localhost:8000/Calculator?wsdl
 ```
 
+
+## Examples
+XML Request
+
+```xml
+<soapenv:Envelope
+    xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body>
+        <Operands>
+            <!--Zero or more repetitions:-->
+            <Operand>1</Operand>
+            <Operand>2</Operand>
+            <Operand>3</Operand>
+        </Operands>
+</soapenv:Envelope>
+```
+
+For this example, the sum_operation function will receive an Pydantic object as body
+
+```python
+print(body)
+# Output Operands(operands=[1.0, 2.0, 3.0])
+
+print(body.operands)
+# Output [1.0, 2.0, 3.0]
+
+```

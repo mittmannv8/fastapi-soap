@@ -38,7 +38,7 @@ def XMLBody(model: Type[BodyContent]) -> Any:
         try:
             envelope = cast(
                 SoapEnvelope[SoapHeader, SoapBody[model]],
-                model_.from_xml(data),
+                model_.from_xml(data.encode()),
             )
             return envelope.body.call
         except ValidationError as err:

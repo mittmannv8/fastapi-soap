@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastapi-soap"
-version = "0.0.4"
+version = "0.0.5"
 description = ""
 authors = ["Cleiton Junior Mittmann <mittmannv8@gmail.com>"]
 readme = "README.md"
