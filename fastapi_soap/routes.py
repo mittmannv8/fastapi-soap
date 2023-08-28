@@ -87,8 +87,8 @@ class SoapRouter(APIRouter):
             '/', self._generate_wsdl, methods=['GET'], status_code=200
         )
 
-    def _generate_wsdl(self):
-        wsdl = generate_wsdl(self._name, self._methods, url=self.prefix)
+    def _generate_wsdl(self, request: Request):
+        wsdl = generate_wsdl(self._name, self._methods, url=self.prefix, request=request)
         return SoapResponse(dump_etree(wsdl), envelope_wrap=False)
 
     def operation(

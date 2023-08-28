@@ -2,6 +2,7 @@ from typing import Optional
 from xml.etree import ElementTree as ET
 from xml.etree.ElementTree import Element, SubElement, tostring
 
+from fastapi import Request
 from pydantic.fields import ModelField
 from pydantic.typing import display_as_type
 from pydantic_xml import BaseXmlModel, XmlElementInfo
@@ -99,7 +100,7 @@ def dump_etree(element: Element) -> str:
 
 
 def generate_wsdl(
-    name: str, methods, url: str, documentation: str = ''
+    name: str, methods, url: str, request: Request, documentation: str = ''
 ) -> Element:
     wsdl = Element('wsdl:definitions', nsmap, name=name)
     SubElement(wsdl, 'wsdl:documentation').text = documentation
@@ -139,7 +140,7 @@ def generate_wsdl(
         SubElement(
             port_element,
             'soap:address',
-            location=f'http://localhost:8000{url}/{method}',
+            location=f'http://{request.headers.get("host")}{url}/{method}',
         )
 
         for action, model in models.items():
