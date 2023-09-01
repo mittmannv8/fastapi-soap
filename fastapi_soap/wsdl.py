@@ -30,29 +30,6 @@ nsmap = {
 }
 
 
-def generate_wsdl_service_location_address(request: Request, method: str) -> str:
-    """generate wsdl url base on request url
-
-    if request url ends with `?wsdl`:
-        http://192.168.1.1/soap/services/?wsdl -> http://192.168.1.1/soap/services/{method}
-    if not then just add method:
-        http://192.168.1.1/soap/services/ -> http://192.168.1.1/soap/services/{method}
-
-    Args:
-        request (Request): _description_
-        method (str): _description_
-
-    Returns:
-        str: _description_
-    """
-    request_url = str(request.url)
-    if request_url.endswith("?wsdl"):
-        request_url = request_url.split("?")[0].strip("/")
-    else:
-        request_url = request_url.strip("/")
-    return f'{request_url}/{method}'
-
-
 def generate_xsd_element(
     model: Optional[BaseXmlModel] = None,
     model_field: Optional[ModelField] = None,
