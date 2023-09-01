@@ -163,7 +163,7 @@ def generate_wsdl(
         SubElement(
             port_element,
             'soap:address',
-            location=generate_wsdl_service_location_address(request, method),
+            location=f'{str(request.url.replace(query="", fragment="")).rstrip("/")}/{method}',
         )
 
         for action, model in models.items():
