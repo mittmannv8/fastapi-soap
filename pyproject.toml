@@ -28,7 +28,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pydantic = "^1.10.5"
+pydantic = "<3"
 lxml = "^4.9.2"
 pydantic-xml = {extras = ["lxml"], version = "^0.6.0"}
 fastapi = "^0.95.0"
