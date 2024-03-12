@@ -3,7 +3,7 @@ from typing import Any
 from fastapi import Response
 from pydantic_xml import BaseXmlModel
 
-from src.utils.fastapi_soap.models import SoapBody, SoapEnvelope, SoapHeader
+from fastapi_soap.models import SoapBody, SoapEnvelope, SoapHeader
 
 
 class SoapResponse(Response):
