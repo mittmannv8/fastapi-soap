@@ -4,8 +4,9 @@ from typing import Any, Type, TypeVar, cast
 from fastapi import Body, Depends
 from pydantic import ValidationError
 
-from fastapi_soap.exceptions import ClientFaultException
-from fastapi_soap.models import BodyContent, SoapBody, SoapEnvelope, SoapHeader
+from src.utils.fastapi_soap.exceptions import ClientFaultException
+from src.utils.fastapi_soap.models import BodyContent, SoapBody, SoapEnvelope, SoapHeader
+
 
 SoapEnvelopeType = TypeVar('SoapEnvelopeType', bound=SoapEnvelope)
 """Generic type for SoapEnvelope"""

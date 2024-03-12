@@ -1,6 +1,8 @@
 from typing import Generic, Optional, TypeVar
 
-from pydantic_xml import BaseGenericXmlModel, BaseXmlModel, element
+from pydantic import ConfigDict
+from pydantic_xml import BaseXmlModel, element
+from pydantic_xml.model import RootXmlModelMeta
 
 
 class SoapHeader(
@@ -28,6 +30,7 @@ class SoapHeader(
     }
     ```
     """
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class BodyContent(BaseXmlModel):
@@ -39,6 +42,7 @@ class BodyContent(BaseXmlModel):
         some_tag: str = element(tag="SomeTag")
     ```
     """
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class EmptyContent(BodyContent):
@@ -53,13 +57,13 @@ class FaultResponse(BodyContent, tag='Fault'):
 
 
 BodyContentType = TypeVar(
-    'BodyContentType', bound=BodyContent | FaultResponse | BaseXmlModel
+    'BodyContentType', bound=BodyContent | FaultResponse | BaseXmlModel | RootXmlModelMeta
 )
 """Generic type for body content. Accepts a BodyContent or a FaultResponse"""
 
 
 class SoapBody(
-    BaseGenericXmlModel,
+    BaseXmlModel,
     Generic[BodyContentType],
     tag='Body',
     ns='soap',
@@ -97,8 +101,9 @@ class SoapBody(
     }
     ```
     """
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    call: Optional[BodyContentType]
+    call: Optional[BodyContentType] = None
 
 
 HeaderType = TypeVar('HeaderType', bound=SoapHeader)
@@ -109,7 +114,7 @@ BodyType = TypeVar('BodyType', bound=SoapBody)
 
 
 class SoapEnvelope(
-    BaseGenericXmlModel,
+    BaseXmlModel,
     Generic[HeaderType, BodyType],
     tag='Envelope',
     ns='soap',
@@ -139,6 +144,7 @@ class SoapEnvelope(
     </soap:Envelope>
     ```
     """
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    header: Optional[HeaderType]
+    header: Optional[HeaderType] = None
     body: BodyType

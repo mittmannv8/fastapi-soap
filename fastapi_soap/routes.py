@@ -5,10 +5,10 @@ from fastapi.routing import APIRoute, APIRouter
 from fastapi.types import DecoratedCallable
 from pydantic_xml import BaseXmlModel
 
-from fastapi_soap.exceptions import FaultException
-from fastapi_soap.models import FaultResponse
-from fastapi_soap.response import SoapResponse
-from fastapi_soap.wsdl import dump_etree, generate_wsdl
+from src.utils.fastapi_soap.exceptions import FaultException
+from src.utils.fastapi_soap.models import FaultResponse
+from src.utils.fastapi_soap.response import SoapResponse
+from src.utils.fastapi_soap.wsdl import dump_etree, generate_wsdl
 
 
 class SoapRoute(APIRoute):

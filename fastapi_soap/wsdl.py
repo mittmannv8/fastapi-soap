@@ -3,12 +3,9 @@ from xml.etree import ElementTree as ET
 from xml.etree.ElementTree import Element, SubElement, tostring
 
 from fastapi import Request
-from pydantic.fields import ModelField
-from pydantic.typing import display_as_type
-from pydantic_xml import BaseXmlModel, XmlElementInfo
-from pydantic_xml.model import XmlModelMeta
-
-nsmap = {'xmlns:xs': 'http://www.w3.org/2001/XMLSchema'}
+from pydantic.v1.typing import display_as_type
+from pydantic_xml import BaseXmlModel
+from pydantic_xml.model import XmlEntityInfo, XmlModelMeta
 
 
 PYTHON_XSD_TYPE_MAP = {
@@ -32,33 +29,32 @@ nsmap = {
 
 def generate_xsd_element(
     model: Optional[BaseXmlModel] = None,
-    model_field: Optional[ModelField] = None,
+    model_field: Optional[XmlEntityInfo] = None,
+    model_field_name: str = None
 ) -> Element:
     element = Element('xs:element')
-    model_ = model or getattr(model_field, 'type_')
+    model_ = model or getattr(model_field, 'annotation')
 
     if model is not None:
         element.set('name', model.__xml_tag__)
-    elif model_field and hasattr(model_field.field_info, 'tag'):
+    elif model_field and hasattr(model_field, 'path'):
         tag_name = (
-            model_field.field_info.tag
-            or model_field.field_info.alias
-            or model_field.name
+            model_field.path
+            or model_field.alias
+            or model_field_name
         )
         element.set('name', tag_name)
     elif hasattr(model_, '__xml_tag__'):
         element.set('name', model_.__xml_tag__)
-    elif isinstance(getattr(model_, 'field_info', None), XmlElementInfo):
-        element.set('name', model_field.name)
     else:
-        element.set('name', model_field.name)
+        element.set('name', model_field_name)
 
     if isinstance(model_, XmlModelMeta):
         complex_type = Element('xs:complexType')
         sequence = ET.SubElement(complex_type, 'xs:sequence')
 
-        for model_field_ in model_.__fields__.values():
-            tag = generate_xsd_element(model_field=model_field_)
+        for model_field_name, model_field_ in model_.__fields__.items():
+            tag = generate_xsd_element(model_field=model_field_, model_field_name=model_field_name)
             sequence.append(tag)
 
         element.append(complex_type)
@@ -69,18 +65,18 @@ def generate_xsd_element(
         )
         element.set('type', f'xs:{element_type}')
 
-    if model_field and model_field.is_complex():
-        if model_field.shape == 2:
-            # TODO: get gt and lt
-            element.set(
-                'minOccurs', str(model_field.field_info.min_items or 0)
-            )
-            element.set(
-                'maxOccurs',
-                str(model_field.field_info.max_items or 'unbounded'),
-            )
-        else:
-            ...
+    # if model_field and model_field.is_complex():
+    #     if model_field.shape == 2:
+    #         # TODO: get gt and lt
+    #         element.set(
+    #             'minOccurs', str(model_field.field_info.min_items or 0)
+    #         )
+    #         element.set(
+    #             'maxOccurs',
+    #             str(model_field.field_info.max_items or 'unbounded'),
+    #         )
+    #     else:
+    #         ...
 
     return element
 

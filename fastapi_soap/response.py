@@ -3,7 +3,7 @@ from typing import Any
 from fastapi import Response
 from pydantic_xml import BaseXmlModel
 
-from fastapi_soap.models import SoapBody, SoapEnvelope, SoapHeader
+from src.utils.fastapi_soap.models import SoapBody, SoapEnvelope, SoapHeader
 
 
 class SoapResponse(Response):
@@ -54,14 +54,15 @@ class SoapResponse(Response):
     def render(self, content: Any) -> str | bytes:
         if isinstance(content, BaseXmlModel):
             if not self._envelope_wrap:
-                return content.to_xml(encoding='UTF-8', standalone=True)
+                return content.to_xml(encoding='UTF-8')
 
+            soap_body_model = SoapBody[content.__class__]
             envelope_model = SoapEnvelope[
-                self._soap_header.__class__, SoapBody[content.__class__]
+                self._soap_header.__class__, soap_body_model
             ]
             envelope: envelope_model = envelope_model(
-                header=self._soap_header, body=SoapBody(call=content)
+                header=self._soap_header, body=soap_body_model(call=content)
             )
-            return envelope.to_xml(encoding='UTF-8', standalone=True)
+            return envelope.to_xml(encoding='UTF-8')
 
         return content if not isinstance(content, str) else content.encode()
