@@ -7,6 +7,7 @@ from pydantic import ValidationError
 from fastapi_soap.exceptions import ClientFaultException
 from fastapi_soap.models import BodyContent, SoapBody, SoapEnvelope, SoapHeader
 
+
 SoapEnvelopeType = TypeVar('SoapEnvelopeType', bound=SoapEnvelope)
 """Generic type for SoapEnvelope"""
 
@@ -81,7 +82,7 @@ def XMLHeader(model: Type[SoapHeader]) -> Any:
     def parse_model(data: str = Body()):
         model_ = SoapEnvelope[model, SoapBody[BodyContent]]
         envelope = cast(
-            SoapEnvelope[model, SoapBody[BodyContent]], model_.from_xml(data)
+            SoapEnvelope[model, SoapBody[BodyContent]], model_.from_xml(data.encode())
         )
         return envelope.header
 
