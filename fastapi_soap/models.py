@@ -1,12 +1,12 @@
 from typing import Generic, Optional, TypeVar
 
-from pydantic_xml import BaseGenericXmlModel, BaseXmlModel, element
+from pydantic_xml import BaseXmlModel, element
 
 
 class SoapHeader(
     BaseXmlModel,
-    tag='Header',
-    ns='soap',
+    tag="Header",
+    ns="soap",
 ):
     """Soap header abstract definition.
 
@@ -45,7 +45,7 @@ class EmptyContent(BodyContent):
     """Helper model for empty requests."""
 
 
-class FaultResponse(BodyContent, tag='Fault'):
+class FaultResponse(BodyContent, tag="Fault"):
     """Soap Fault response model."""
 
     faultcode: str = element()
@@ -53,16 +53,16 @@ class FaultResponse(BodyContent, tag='Fault'):
 
 
 BodyContentType = TypeVar(
-    'BodyContentType', bound=BodyContent | FaultResponse | BaseXmlModel
+    "BodyContentType", bound=BodyContent | FaultResponse | BaseXmlModel
 )
 """Generic type for body content. Accepts a BodyContent or a FaultResponse"""
 
 
 class SoapBody(
-    BaseGenericXmlModel,
+    BaseXmlModel,
     Generic[BodyContentType],
-    tag='Body',
-    ns='soap',
+    tag="Body",
+    ns="soap",
 ):
     """Soap body abstract model definition.
 
@@ -101,20 +101,20 @@ class SoapBody(
     call: Optional[BodyContentType]
 
 
-HeaderType = TypeVar('HeaderType', bound=SoapHeader)
+HeaderType = TypeVar("HeaderType", bound=SoapHeader)
 """Generic type for SoapHeader model"""
 
-BodyType = TypeVar('BodyType', bound=SoapBody)
+BodyType = TypeVar("BodyType", bound=SoapBody)
 """Generic type for Body model"""
 
 
 class SoapEnvelope(
-    BaseGenericXmlModel,
+    BaseXmlModel,
     Generic[HeaderType, BodyType],
-    tag='Envelope',
-    ns='soap',
+    tag="Envelope",
+    ns="soap",
     nsmap={
-        'soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+        "soap": "http://schemas.xmlsoap.org/soap/envelope/",
     },
 ):
     """Soap Envelope abstract definition.

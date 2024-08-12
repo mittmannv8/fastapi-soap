@@ -4,14 +4,12 @@ from fastapi_soap.request import XMLBody
 from fastapi_soap.response import SoapResponse
 from fastapi_soap.routes import SoapRouter
 
-from schema import Operands, Result
+from .schema import Operands, Result
 
-soap = SoapRouter(name='Calculator', prefix='/Calculator')
+soap = SoapRouter(name="Calculator", prefix="/Calculator")
 
 
-@soap.operation(
-    name='SumOperation', request_model=Operands, response_model=Result
-)
+@soap.operation(name="SumOperation", request_model=Operands, response_model=Result)
 def sum_operation(body: Operands = XMLBody(Operands)):
     result = sum(body.operands)
 

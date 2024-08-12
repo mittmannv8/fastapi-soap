@@ -4,7 +4,7 @@ version = "0"
 description = ""
 authors = ["Cleiton Junior Mittmann <mittmannv8@gmail.com>"]
 readme = "README.md"
-packages = [{include = "fastapi_soap"}]
+packages = [{ include = "fastapi_soap" }]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Web Environment",
@@ -30,8 +30,8 @@ classifiers = [
 python = "^3.10"
 pydantic = "<3"
 lxml = "^4.9.2"
-pydantic-xml = {extras = ["lxml"], version = "^0.6.0"}
-fastapi = "^0.95.0"
+fastapi = "^0.112.0"
+pydantic-xml = { extras = ["lxml"], version = "^2.11.0" }
 
 
 [tool.poetry.group.dev.dependencies]
@@ -43,4 +43,3 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry-version-plugin]
 source = "git-tag"
-

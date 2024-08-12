@@ -19,9 +19,7 @@ class SoapRoute(APIRoute):
     to FastAPI app.
     """
 
-    async def exception_response(
-        self, fault, status_code: int = 500
-    ) -> Response:
+    async def exception_response(self, fault, status_code: int = 500) -> Response:
         return SoapResponse(fault, status_code=status_code)
 
     def get_route_handler(self) -> Callable:
@@ -33,15 +31,13 @@ class SoapRoute(APIRoute):
 
             except FaultException as fault:
                 return await self.exception_response(
-                    FaultResponse(
-                        faultcode=fault.code, faultstring=fault.detail
-                    )
+                    FaultResponse(faultcode=fault.code, faultstring=fault.detail)
                 )
             except Exception as exc:
                 return await self.exception_response(
                     FaultResponse(
-                        faultcode='server',
-                        faultstring=f'Internal Error: {exc}',
+                        faultcode="server",
+                        faultstring=f"Internal Error: {exc}",
                     )
                 )
 
@@ -83,13 +79,15 @@ class SoapRouter(APIRouter):
         self._name = name
 
         self._methods = {}
-        self.add_api_route(
-            '/', self._generate_wsdl, methods=['GET'], status_code=200
-        )
+        self.add_api_route("/", self._generate_wsdl, methods=["GET"], status_code=200)
 
     def _generate_wsdl(self, request: Request):
-        wsdl = generate_wsdl(self._name, self._methods, url=self.prefix, request=request)
-        return SoapResponse(dump_etree(wsdl), envelope_wrap=False)
+        wsdl = generate_wsdl(
+            self._name, self._methods, url=self.prefix, request=request
+        )
+        etree = dump_etree(wsdl)
+        print(etree)
+        return SoapResponse(etree, envelope_wrap=False)
 
     def operation(
         self,
@@ -120,12 +118,12 @@ class SoapRouter(APIRouter):
 
         def decorator(func: DecoratedCallable) -> DecoratedCallable:
             self._methods.update(
-                {name: {'request': request_model, 'response': response_model}}
+                {name: {"request": request_model, "response": response_model}}
             )
             self.add_api_route(
-                f'/{name}',
+                f"/{name}",
                 func,
-                methods=['POST'],
+                methods=["POST"],
                 response_class=SoapResponse,
                 status_code=status_code,
             )
