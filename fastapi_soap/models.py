@@ -7,8 +7,8 @@ from pydantic_xml.model import RootXmlModelMeta
 
 class SoapHeader(
     BaseXmlModel,
-    tag='Header',
-    ns='soap',
+    tag="Header",
+    ns="soap",
 ):
     """Soap header abstract definition.
 
@@ -30,6 +30,7 @@ class SoapHeader(
     }
     ```
     """
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
@@ -42,6 +43,7 @@ class BodyContent(BaseXmlModel):
         some_tag: str = element(tag="SomeTag")
     ```
     """
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
@@ -49,7 +51,7 @@ class EmptyContent(BodyContent):
     """Helper model for empty requests."""
 
 
-class FaultResponse(BodyContent, tag='Fault'):
+class FaultResponse(BodyContent, tag="Fault"):
     """Soap Fault response model."""
 
     faultcode: str = element()
@@ -57,7 +59,8 @@ class FaultResponse(BodyContent, tag='Fault'):
 
 
 BodyContentType = TypeVar(
-    'BodyContentType', bound=BodyContent | FaultResponse | BaseXmlModel | RootXmlModelMeta
+    "BodyContentType",
+    bound=BodyContent | FaultResponse | BaseXmlModel | RootXmlModelMeta,
 )
 """Generic type for body content. Accepts a BodyContent or a FaultResponse"""
 
@@ -65,8 +68,8 @@ BodyContentType = TypeVar(
 class SoapBody(
     BaseXmlModel,
     Generic[BodyContentType],
-    tag='Body',
-    ns='soap',
+    tag="Body",
+    ns="soap",
 ):
     """Soap body abstract model definition.
 
@@ -101,25 +104,26 @@ class SoapBody(
     }
     ```
     """
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     call: Optional[BodyContentType] = None
 
 
-HeaderType = TypeVar('HeaderType', bound=SoapHeader)
+HeaderType = TypeVar("HeaderType", bound=SoapHeader)
 """Generic type for SoapHeader model"""
 
-BodyType = TypeVar('BodyType', bound=SoapBody)
+BodyType = TypeVar("BodyType", bound=SoapBody)
 """Generic type for Body model"""
 
 
 class SoapEnvelope(
     BaseXmlModel,
     Generic[HeaderType, BodyType],
-    tag='Envelope',
-    ns='soap',
+    tag="Envelope",
+    ns="soap",
     nsmap={
-        'soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+        "soap": "http://schemas.xmlsoap.org/soap/envelope/",
     },
 ):
     """Soap Envelope abstract definition.
@@ -144,6 +148,7 @@ class SoapEnvelope(
     </soap:Envelope>
     ```
     """
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     header: Optional[HeaderType] = None

@@ -7,7 +7,7 @@ class FaultException(Exception):
     code: str
     detail: str
 
-    def __init__(self, detail: str, code: str = 'server'):
+    def __init__(self, detail: str, code: str = "server"):
         """Default Fault Exception.
 
         Args:
@@ -37,5 +37,5 @@ class FaultException(Exception):
 
 
 class ClientFaultException(FaultException):
-    def __init__(self, detail: str, code: str = 'client'):
+    def __init__(self, detail: str, code: str = "client"):
         super().__init__(detail, code)

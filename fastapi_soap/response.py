@@ -9,7 +9,7 @@ from fastapi_soap.models import SoapBody, SoapEnvelope, SoapHeader
 class SoapResponse(Response):
     """FastAPI Response that renders a Soap XML response."""
 
-    media_type = 'text/xml'
+    media_type = "text/xml"
 
     def __init__(
         self,
@@ -54,15 +54,13 @@ class SoapResponse(Response):
     def render(self, content: Any) -> str | bytes:
         if isinstance(content, BaseXmlModel):
             if not self._envelope_wrap:
-                return content.to_xml(encoding='UTF-8')
+                return content.to_xml(encoding="UTF-8")
 
             soap_body_model = SoapBody[content.__class__]
-            envelope_model = SoapEnvelope[
-                self._soap_header.__class__, soap_body_model
-            ]
+            envelope_model = SoapEnvelope[self._soap_header.__class__, soap_body_model]
             envelope: envelope_model = envelope_model(
                 header=self._soap_header, body=soap_body_model(call=content)
             )
-            return envelope.to_xml(encoding='UTF-8')
+            return envelope.to_xml(encoding="UTF-8")
 
         return content if not isinstance(content, str) else content.encode()
