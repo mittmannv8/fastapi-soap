@@ -36,7 +36,7 @@ def XMLBody(model: Type[BodyContent]) -> Any:
     at this stage. The XMLBody function will return a properly XML Client Fault
     """
 
-    def parse_model(data: str = Body()) -> Any:
+    def parse_model(data: str = Body(media_type="application/xml")) -> Any:
         model_ = SoapEnvelope[SoapHeader, SoapBody[model]]
         logger.debug("Parsing SOAP envelope using %s model. Request %s", model_, data)
 
